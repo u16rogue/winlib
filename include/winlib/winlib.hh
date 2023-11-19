@@ -56,6 +56,23 @@ auto enumerate_exports(void * base, T && cb) -> bool {
   return true;
 }
 
+template <typename T>
+auto enumerate_sections(void * base, T && cb) -> bool {
+  if (!base) {
+    return false;
+  }
+
+  NTHeaders64   * ntheaders = get_ntheaders64(base);
+  SectionHeader * sections  = reinterpret_cast<decltype(sections)>(ntheaders + 1);
+  for (mpp::u32 i = 0; i < ntheaders->NumberOfSections; ++i) {
+    if (!cb(&sections[i])) {
+      break;
+    }
+  }
+
+  return true;
+}
+
 auto find_export(void * base, mpp::CmpHStr name) -> void *;
 
 } // namespace winlib
