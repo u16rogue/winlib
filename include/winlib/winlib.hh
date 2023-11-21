@@ -75,4 +75,7 @@ auto enumerate_sections(void * base, T && cb) -> bool {
 
 auto find_export(void * base, mpp::CmpHStr name) -> void *;
 
+auto rva_to_fo(void * base, mpp::u64 rva) -> mpp::u64;
+auto fo_to_rva(void * base, mpp::u64 ro) -> mpp::u64;
+
 } // namespace winlib
