@@ -75,3 +75,12 @@ auto winlib::fo_to_rva(void * base, mpp::u64 fo) -> mpp::u64 {
 
   return result;
 }
+
+
+auto winlib::get_descriptor_libname(void * base, ImportDescriptor * descriptor) -> const char * {
+  return reinterpret_cast<const char *>(base) + descriptor->Name;
+}
+
+auto winlib::is_libimport_id_string(const char * id) -> bool {
+  return *reinterpret_cast<mpp::u64 *>(&id) & 0xFFFFFFFFFFFF0000;
+}

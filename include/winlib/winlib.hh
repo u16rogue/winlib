@@ -36,9 +36,6 @@ auto enumerate_ldr_entry(T && cb) -> bool {
 template <typename T>
 auto enumerate_exports(void * base, T && cb) -> bool {
   NTHeaders64 * nt = get_ntheaders64(base);
-  if (!nt) {
-    return false;
-  }
 
   mpp::u8 * base8 = reinterpret_cast<decltype(base8)>(base);
   ExportDirectory * export_directory = reinterpret_cast<decltype(export_directory)>(base8 + nt->DataDirectory[_IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
@@ -73,8 +70,48 @@ auto enumerate_sections(void * base, T && cb) -> bool {
   return true;
 }
 
-auto find_export(void * base, mpp::CmpHStr name) -> void *;
+template <typename T>
+auto enumerate_module_imports(void * base, T && cb) -> bool {
+  NTHeaders64 * nt = get_ntheaders64(base);
 
+  mpp::u8 * base8 = reinterpret_cast<decltype(base8)>(base);
+  const auto [dva, dsz] = nt->DataDirectory[_IMAGE_DIRECTORY_ENTRY_IMPORT];
+  const void * const end = base8 + dva + dsz;
+  
+  for (ImportDescriptor * current = reinterpret_cast<decltype(current)>(base8 + dva); current < end && current->Name != 0; ++current) {
+    if (!cb(current)) {
+      break;
+    }
+  }
+
+  return true;
+}
+
+template <typename T>
+auto enumerate_import_descriptor_libimports(void * base, ImportDescriptor * descriptor, T && cb) -> bool {
+  mpp::u8 * const baseu8 = reinterpret_cast<decltype(baseu8)>(base);
+  mpp::u64 * ident = reinterpret_cast<decltype(ident)>(baseu8 + descriptor->OriginalFirstThunk);
+  void **    pfn   = reinterpret_cast<decltype(pfn)>(baseu8 + descriptor->FirstThunk);
+
+  for (; *ident; ++ident, ++pfn) {
+    const char * id;
+    if ((*ident & 0x8000000000000000ULL) != 0) {
+      id = (const char *)(*ident & 0x000000000000FFFF); // Import by ordinal
+    } else {
+      id = reinterpret_cast<ImportByNameInfo *>(baseu8 + *ident)->Name; // Import by name
+    }
+
+    if (!cb(id, pfn)) {
+      break;
+    }
+  }
+
+  return true;
+}
+
+auto is_libimport_id_string(const char * id) -> bool;
+auto get_descriptor_libname(void * base, ImportDescriptor * descriptor) -> const char *;
+auto find_export(void * base, mpp::CmpHStr name) -> void *;
 auto rva_to_fo(void * base, mpp::u64 rva) -> mpp::u64;
 auto fo_to_rva(void * base, mpp::u64 ro) -> mpp::u64;
 
