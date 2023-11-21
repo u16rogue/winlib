@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstddef>
 #include <metapp/metapp.hh>
 
 namespace winlib {
@@ -45,33 +44,23 @@ struct __attribute__((packed)) PEB64 {
 static_assert(offsetof(PEB64, being_debugged) == 0x02);
 static_assert(offsetof(PEB64, ldr_data)       == 0x18);
 
-#undef IMAGE_FILE_MACHINE_IA64 
-#undef IMAGE_FILE_MACHINE_AMD64
-#undef IMAGE_FILE_MACHINE_I386 
-constexpr mpp::u16 IMAGE_FILE_MACHINE_IA64  = 0x0200;
-constexpr mpp::u16 IMAGE_FILE_MACHINE_AMD64 = 0x8664;
-constexpr mpp::u16 IMAGE_FILE_MACHINE_I386  = 0x014c;
+constexpr mpp::u16 _IMAGE_FILE_MACHINE_IA64  = 0x0200;
+constexpr mpp::u16 _IMAGE_FILE_MACHINE_AMD64 = 0x8664;
+constexpr mpp::u16 _IMAGE_FILE_MACHINE_I386  = 0x014c;
 
-#undef IMAGE_NUMBEROF_DIRECTORY_ENTRIES
-#undef IMAGE_DIRECTORY_ENTRY_EXPORT    
-#undef IMAGE_DIRECTORY_ENTRY_IMPORT    
-#undef IMAGE_DIRECTORY_ENTRY_BASERELOC 
-#undef IMAGE_DIRECTORY_ENTRY_TLS       
-constexpr mpp::u32 IMAGE_NUMBEROF_DIRECTORY_ENTRIES = 16;
-constexpr mpp::u32 IMAGE_DIRECTORY_ENTRY_EXPORT     = 0;
-constexpr mpp::u32 IMAGE_DIRECTORY_ENTRY_IMPORT     = 1;
-constexpr mpp::u32 IMAGE_DIRECTORY_ENTRY_BASERELOC  = 5;
-constexpr mpp::u32 IMAGE_DIRECTORY_ENTRY_TLS        = 9;
+constexpr mpp::u32 _IMAGE_NUMBEROF_DIRECTORY_ENTRIES = 16;
+constexpr mpp::u32 _IMAGE_DIRECTORY_ENTRY_EXPORT     = 0;
+constexpr mpp::u32 _IMAGE_DIRECTORY_ENTRY_IMPORT     = 1;
+constexpr mpp::u32 _IMAGE_DIRECTORY_ENTRY_BASERELOC  = 5;
+constexpr mpp::u32 _IMAGE_DIRECTORY_ENTRY_TLS        = 9;
 
-#undef IMAGE_NT_OPTIONAL_HDR32_MAGIC
-#undef IMAGE_NT_OPTIONAL_HDR64_MAGIC
-#undef IMAGE_ROM_OPTIONAL_HDR_MAGIC 
-constexpr mpp::u16 IMAGE_NT_OPTIONAL_HDR32_MAGIC = 0x010b;
-constexpr mpp::u16 IMAGE_NT_OPTIONAL_HDR64_MAGIC = 0x020b;
-constexpr mpp::u16 IMAGE_ROM_OPTIONAL_HDR_MAGIC  = 0x0107;
+constexpr mpp::u16 _IMAGE_NT_OPTIONAL_HDR32_MAGIC = 0x010b;
+constexpr mpp::u16 _IMAGE_NT_OPTIONAL_HDR64_MAGIC = 0x020b;
+constexpr mpp::u16 _IMAGE_ROM_OPTIONAL_HDR_MAGIC  = 0x0107;
 
-constexpr mpp::u32 _IMAGE_SCN_CNT_CODE    = 0x00000020;
-constexpr mpp::u32 _IMAGE_SCN_MEM_EXECUTE = 0x20000000;
+constexpr mpp::u32 _IMAGE_SCN_CNT_CODE        = 0x00000020;
+constexpr mpp::u32 _IMAGE_SCN_MEM_EXECUTE     = 0x20000000;
+constexpr mpp::u32 _IMAGE_SCN_MEM_DISCARDABLE = 0x02000000;
 
 #undef IMAGE_SIZEOF_SHORT_NAME
 constexpr mpp::i32 IMAGE_SIZEOF_SHORT_NAME = 8;
