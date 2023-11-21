@@ -1,6 +1,7 @@
 #pragma once
 
 #include <metapp/metapp.hh>
+#include <cstddef> // [21/11/2023 - r] TODO: remove
 
 namespace winlib {
 
@@ -62,8 +63,7 @@ constexpr mpp::u32 _IMAGE_SCN_CNT_CODE        = 0x00000020;
 constexpr mpp::u32 _IMAGE_SCN_MEM_EXECUTE     = 0x20000000;
 constexpr mpp::u32 _IMAGE_SCN_MEM_DISCARDABLE = 0x02000000;
 
-#undef IMAGE_SIZEOF_SHORT_NAME
-constexpr mpp::i32 IMAGE_SIZEOF_SHORT_NAME = 8;
+constexpr mpp::i32 _IMAGE_SIZEOF_SHORT_NAME = 8;
 
 struct DOSHeader {
   mpp::u16 e_magic;
@@ -132,7 +132,7 @@ struct NTHeaders64 {
   mpp::u64 SizeOfHeapCommit;
   mpp::u32 LoaderFlags;
   mpp::u32 NumberOfRvaAndSizes;
-  DataDirectory DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
+  DataDirectory DataDirectory[_IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
 };
 
 struct ExportDirectory {
@@ -150,7 +150,7 @@ struct ExportDirectory {
 };
 
 struct SectionHeader {
-  mpp::u8  Name[IMAGE_SIZEOF_SHORT_NAME];
+  mpp::u8  Name[_IMAGE_SIZEOF_SHORT_NAME];
   union {
     mpp::u32 PhysicalAddress;
     mpp::u32 VirtualSize;

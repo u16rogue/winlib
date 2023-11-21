@@ -41,7 +41,7 @@ auto enumerate_exports(void * base, T && cb) -> bool {
   }
 
   mpp::u8 * base8 = reinterpret_cast<decltype(base8)>(base);
-  ExportDirectory * export_directory = reinterpret_cast<decltype(export_directory)>(base8 + nt->DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+  ExportDirectory * export_directory = reinterpret_cast<decltype(export_directory)>(base8 + nt->DataDirectory[_IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
 
   mpp::u32 * name = reinterpret_cast<decltype(name)>(base8 + export_directory->AddressOfNames);
   mpp::u32 * func = reinterpret_cast<decltype(func)>(base8 + export_directory->AddressOfFunctions);
