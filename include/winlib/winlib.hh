@@ -71,7 +71,7 @@ auto enumerate_sections(void * base, T && cb) -> bool {
 }
 
 template <typename T>
-auto enumerate_module_imports(void * base, T && cb) -> bool {
+auto enumerate_imported_modules(void * base, T && cb) -> bool {
   NTHeaders64 * nt = get_ntheaders64(base);
 
   mpp::u8 * base8 = reinterpret_cast<decltype(base8)>(base);
@@ -88,7 +88,7 @@ auto enumerate_module_imports(void * base, T && cb) -> bool {
 }
 
 template <typename T>
-auto enumerate_import_descriptor_libimports(void * base, ImportDescriptor * descriptor, T && cb) -> bool {
+auto enumerate_descriptor_imports(void * base, ImportDescriptor * descriptor, T && cb) -> bool {
   mpp::u8 * const baseu8 = reinterpret_cast<decltype(baseu8)>(base);
   mpp::u64 * ident = reinterpret_cast<decltype(ident)>(baseu8 + descriptor->OriginalFirstThunk);
   void **    pfn   = reinterpret_cast<decltype(pfn)>(baseu8 + descriptor->FirstThunk);
@@ -101,7 +101,7 @@ auto enumerate_import_descriptor_libimports(void * base, ImportDescriptor * desc
       id = reinterpret_cast<ImportByNameInfo *>(baseu8 + *ident)->Name; // Import by name
     }
 
-    if (!cb(id, pfn)) {
+    if (!cb(pfn, id)) {
       break;
     }
   }
