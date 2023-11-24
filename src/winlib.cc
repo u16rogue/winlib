@@ -27,22 +27,16 @@ auto winlib::find_export(void * base, mpp::CmpHStr name) -> void * {
 }
 
 auto winlib::rva_to_fo(void * base, mpp::u64 rva) -> mpp::u64 {
-  mpp::u64 result = rva;
+  mpp::u64 result = 0;
 
   NTHeaders64 * ntheader = get_ntheaders64(base);
   if (!ntheader) {
     return 0;
   }
 
-  if (ntheader->SizeOfHeaders < rva) {
-    return result;
-  }
-
   enumerate_sections(base, [&](SectionHeader * section) -> bool {
-    // We use SizeOfRawData as having an RVA that lands on a padded section we wont be able to properly
-    // index it as a file offset
     if (rva >= section->VirtualAddress && rva < section->VirtualAddress + section->SizeOfRawData) {
-      result = (rva - section->VirtualAddress) + section->PointerToRawData;
+      result = section->PointerToRawData + (rva - section->VirtualAddress);
       return false;
     }
     return true;
@@ -52,22 +46,16 @@ auto winlib::rva_to_fo(void * base, mpp::u64 rva) -> mpp::u64 {
 }
 
 auto winlib::fo_to_rva(void * base, mpp::u64 fo) -> mpp::u64 {
-  mpp::u64 result = fo;
+  mpp::u64 result = 0;
 
   NTHeaders64 * ntheader = get_ntheaders64(base);
   if (!ntheader) {
     return 0;
   }
 
-  if (ntheader->SizeOfHeaders < fo) {
-    return result;
-  }
-
   enumerate_sections(base, [&](SectionHeader * section) -> bool {
-    // We use SizeOfRawData as having an RVA that lands on a padded section we wont be able to properly
-    // index it as a file offset
     if (fo >= section->PointerToRawData && fo < section->PointerToRawData + section->SizeOfRawData) {
-      result = (fo - section->PointerToRawData) + section->VirtualAddress;
+      result = section->VirtualAddress + (fo - section->PointerToRawData);
       return false;
     }
     return true;
