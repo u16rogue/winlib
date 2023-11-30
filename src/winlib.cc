@@ -1,4 +1,5 @@
 #include <winlib/winlib.hh>
+#include <memory>
 
 auto winlib::get_peb64() -> PEB64 * {
   void * pp = nullptr;
@@ -70,5 +71,5 @@ auto winlib::get_descriptor_libname(void * base, ImportDescriptor * descriptor) 
 }
 
 auto winlib::is_libimport_id_string(const char * id) -> bool {
-  return *reinterpret_cast<mpp::u64 *>(&id) & 0xFFFFFFFFFFFF0000;
+  return std::bit_cast<mpp::u64>(&id) & 0xFFFFFFFFFFFF0000;
 }

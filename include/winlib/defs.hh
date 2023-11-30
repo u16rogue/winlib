@@ -62,6 +62,8 @@ constexpr mpp::u16 _IMAGE_ROM_OPTIONAL_HDR_MAGIC  = 0x0107;
 constexpr mpp::u32 _IMAGE_SCN_CNT_CODE        = 0x00000020;
 constexpr mpp::u32 _IMAGE_SCN_MEM_EXECUTE     = 0x20000000;
 constexpr mpp::u32 _IMAGE_SCN_MEM_DISCARDABLE = 0x02000000;
+constexpr mpp::u32 _IMAGE_SCN_MEM_READ        = 0x40000000;
+constexpr mpp::u32 _IMAGE_SCN_MEM_WRITE       = 0x80000000;
 
 constexpr mpp::i32 _IMAGE_SIZEOF_SHORT_NAME = 8;
 
