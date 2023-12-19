@@ -5,6 +5,35 @@
 
 namespace winlib {
 
+enum class SystemInformationClass {
+  SystemHandleInformation = 0x10,
+};
+
+struct QSI_SystemHandleInformation {
+  static constexpr SystemInformationClass ID = SystemInformationClass::SystemHandleInformation;
+
+  struct HandleTableEntryInfo {
+    mpp::u16 ownerpid;
+    mpp::u16 __pad0;
+    mpp::u8 typeindex;
+    mpp::u8 attributes;
+    mpp::u16 hvalue;
+    mpp::u64 object;
+    mpp::u64 access;
+  };
+
+  mpp::u64 nhandles;
+  HandleTableEntryInfo handles[1];
+};
+
+union QSI {
+  QSI_SystemHandleInformation * handleinformation;
+};
+static_assert(sizeof(QSI) == sizeof(void*));
+
+using NtQuerySystemInformationFn = mpp::u64(SystemInformationClass, QSI, mpp::u64, mpp::u64*);
+constexpr mpp::u64 _STATUS_INFO_LENGTH_MISMATCH = 0xC0000004;
+
 struct WinUnicodeString {
   mpp::u16 length;
   mpp::u16 maxlen;
@@ -13,7 +42,8 @@ struct WinUnicodeString {
 
 struct __attribute__((packed)) LDRDataTableEntry64 {
   LDRDataTableEntry64 * next;
-  mpp::u8         _pad0[40];
+  LDRDataTableEntry64 * prev;
+  mpp::u8         _pad0[32];
   mpp::u8 *       base_address;
   mpp::u8         _pad1[8];
   mpp::u64        size;
